@@ -5,13 +5,14 @@
 class VHSTraderGame {
     constructor() {
         // Game state
-        this.balance = 500;
+        this.balance = 0;
         this.day = 1;
         this.soldUnique = new Set();
         this.soldTotal = 0;
         this.shelf = []; // 10 slots
         this.ownedFilms = new Set(); // films we own (on shelf or in inventory)
         this.inventory = []; // extra films not on shelf
+        this.shopFilmOrder = []; // randomized order of films in shop
 
         // Day state
         this.currentCustomerIndex = 0;
@@ -107,10 +108,14 @@ class VHSTraderGame {
             this.customerRequestEl.textContent = `День ${this.day}. Нажмите "Начать день" чтобы открыть магазин.`;
         } else {
             // No saved progress - start fresh
-            const shuffled = [...FILMS].sort(() => Math.random() - 0.5);
+            // Generate random shop order for this playthrough
+            this.shopFilmOrder = [...FILMS].sort(() => Math.random() - 0.5).map(f => f.id);
+
+            // Fill initial shelf with first 10 films from shuffled order
             for (let i = 0; i < 10; i++) {
-                this.shelf.push(shuffled[i]);
-                this.ownedFilms.add(shuffled[i].id);
+                const film = FILMS.find(f => f.id === this.shopFilmOrder[i]);
+                this.shelf.push(film);
+                this.ownedFilms.add(film.id);
             }
         }
 
@@ -390,8 +395,10 @@ class VHSTraderGame {
         const genreFilter = this.filterGenre.value;
         const priceFilter = this.filterPrice.value;
 
-        // 1. Filter films
-        let films = FILMS.filter(film => !this.ownedFilms.has(film.id));
+        // 1. Get films in randomized order, filter out owned
+        let films = this.shopFilmOrder
+            .map(id => FILMS.find(f => f.id === id))
+            .filter(film => film && !this.ownedFilms.has(film.id));
 
         // Apply genre filter
         if (genreFilter) {
@@ -527,13 +534,14 @@ class VHSTraderGame {
         this.clearProgress();
 
         // Reset all state
-        this.balance = 500;
+        this.balance = 0;
         this.day = 1;
         this.soldUnique = new Set();
         this.soldTotal = 0;
         this.shelf = [];
         this.ownedFilms = new Set();
         this.inventory = [];
+        this.shopFilmOrder = [];
         this.currentCustomerIndex = 0;
         this.todayCustomers = [];
         this.currentRequest = null;
@@ -541,11 +549,12 @@ class VHSTraderGame {
         this.isDay = false;
         this.isEvening = false;
 
-        // Reinitialize
-        const shuffled = [...FILMS].sort(() => Math.random() - 0.5);
+        // Reinitialize with new random shop order
+        this.shopFilmOrder = [...FILMS].sort(() => Math.random() - 0.5).map(f => f.id);
         for (let i = 0; i < 10; i++) {
-            this.shelf.push(shuffled[i]);
-            this.ownedFilms.add(shuffled[i].id);
+            const film = FILMS.find(f => f.id === this.shopFilmOrder[i]);
+            this.shelf.push(film);
+            this.ownedFilms.add(film.id);
         }
 
         // Hide modals
@@ -578,7 +587,8 @@ class VHSTraderGame {
             soldTotal: this.soldTotal,
             soldUnique: [...this.soldUnique],
             shelf: this.shelf.map(film => film ? film.id : null),
-            ownedFilms: [...this.ownedFilms]
+            ownedFilms: [...this.ownedFilms],
+            shopFilmOrder: this.shopFilmOrder
         };
 
         try {
@@ -601,6 +611,7 @@ class VHSTraderGame {
             this.soldTotal = saveData.soldTotal;
             this.soldUnique = new Set(saveData.soldUnique);
             this.ownedFilms = new Set(saveData.ownedFilms);
+            this.shopFilmOrder = saveData.shopFilmOrder || [];
 
             // Restore shelf from film IDs
             this.shelf = saveData.shelf.map(filmId => {
