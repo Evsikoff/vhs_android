@@ -230,6 +230,7 @@ body {
     background: linear-gradient(135deg, #2a2a3a 0%, #1a1a25 50%, #0a0a10 100%);
     border-radius: 4px;
     padding: 4px;
+    padding-left: 8px;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.1),
         inset 0 -1px 0 rgba(0, 0, 0, 0.3),
@@ -254,12 +255,11 @@ body {
 
 .cover-wrapper {
     flex: 1;
-    width: calc(100% - 4px);
+    width: 100%;
     min-height: 0;
     position: relative;
     overflow: hidden;
     border-radius: 3px;
-    margin-left: 4px;
     border: 2px solid #1a1a25;
     box-shadow:
         inset 0 0 10px rgba(0, 0, 0, 0.5),
@@ -293,19 +293,21 @@ body {
 }
 
 .vhs-label {
-    flex-shrink: 0;
-    background: linear-gradient(180deg, #f5f5dc 0%, #e8e8d0 50%, #d4d4c0 100%);
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    right: 4px;
+    background: linear-gradient(180deg, rgba(245, 245, 220, 0.95) 0%, rgba(232, 232, 208, 0.95) 50%, rgba(212, 212, 192, 0.95) 100%);
     padding: 4px 6px;
-    margin-left: 4px;
-    margin-top: 4px;
     border-radius: 2px;
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        0 1px 2px rgba(0, 0, 0, 0.3);
+        0 1px 3px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     gap: 2px;
     align-items: center;
+    z-index: 2;
 }
 
 .slot-title {
