@@ -210,13 +210,47 @@ body {
     box-shadow: none;
 }
 
+/* === VHS TAPE STYLE === */
 .shelf-running-content {
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
-    padding: 6px;
+    padding: 8px;
     gap: 6px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0d0d15 100%);
+}
+
+.vhs-case {
+    flex: 1;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: linear-gradient(135deg, #2a2a3a 0%, #1a1a25 50%, #0a0a10 100%);
+    border-radius: 4px;
+    padding: 4px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.vhs-spine {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: linear-gradient(180deg,
+        #3d3d4d 0%,
+        #2a2a35 20%,
+        #1a1a22 50%,
+        #2a2a35 80%,
+        #3d3d4d 100%);
+    border-radius: 4px 0 0 4px;
+    box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.5);
 }
 
 .cover-wrapper {
@@ -224,9 +258,30 @@ body {
     width: 100%;
     position: relative;
     overflow: hidden;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
     min-height: 0;
+    margin-left: 4px;
+    border: 2px solid #1a1a25;
+    box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cover-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.2) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
 }
 
 .cover-wrapper img {
@@ -234,19 +289,27 @@ body {
     height: 100%;
     object-fit: cover;
     display: block;
-    aspect-ratio: 2/3;
+    filter: saturate(1.1) contrast(1.05);
 }
 
-.slot-info {
+.vhs-label {
+    background: linear-gradient(180deg, #f5f5dc 0%, #e8e8d0 50%, #d4d4c0 100%);
+    padding: 4px 6px;
+    margin-left: 4px;
+    margin-top: 4px;
+    border-radius: 2px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 1px 2px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 2px;
+    align-items: center;
 }
 
 .slot-title {
-    color: var(--text-primary);
-    font-size: 10px;
+    color: #1a1a2e;
+    font-size: 9px;
     text-align: center;
     line-height: 1.2;
     font-weight: bold;
@@ -255,21 +318,20 @@ body {
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-    height: 2.4em;
-    /* Allocate space for 2 lines */
+    text-shadow: none;
+    height: 2.2em;
 }
 
 .slot-price {
-    position: static;
-    background: rgba(0, 0, 0, 0.6);
-    color: var(--gold);
-    font-size: 10px;
+    background: linear-gradient(135deg, var(--neon-pink) 0%, #cc2255 100%);
+    color: #fff;
+    font-size: 9px;
     font-weight: bold;
-    padding: 2px 6px;
-    border-radius: 3px;
+    padding: 2px 8px;
+    border-radius: 2px;
     font-family: var(--font-retro);
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 /* === BUTTONS === */
@@ -418,16 +480,17 @@ body {
     overflow-y: auto;
 }
 
+/* === SHOP VHS STYLE === */
 .shop-item {
-    background: #2a1a3a;
+    background: linear-gradient(135deg, #2a2a3a 0%, #1a1a25 50%, #0a0a10 100%);
     border: 2px solid #4a3660;
     border-radius: 8px;
-    padding: 12px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     transition: all 0.3s ease;
-    align-items: center;
+    align-items: stretch;
     position: relative;
     height: 100%;
 }
@@ -445,46 +508,111 @@ body {
     border-color: #333;
 }
 
+.shop-vhs-case {
+    position: relative;
+    padding: 6px;
+    background: linear-gradient(180deg, #3d3d4d 0%, #2a2a35 20%, #1a1a22 100%);
+    border-radius: 4px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.shop-vhs-spine {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    background: linear-gradient(180deg,
+        #4d4d5d 0%,
+        #3a3a45 20%,
+        #2a2a32 50%,
+        #3a3a45 80%,
+        #4d4d5d 100%);
+    border-radius: 4px 0 0 4px;
+    box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.shop-cover-wrapper {
+    margin-left: 10px;
+    position: relative;
+    border: 2px solid #1a1a25;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.shop-cover-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.2) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
 .shop-item img {
     width: 100%;
     aspect-ratio: 2/3;
     object-fit: cover;
-    border-radius: 4px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: block;
+    filter: saturate(1.1) contrast(1.05);
+}
+
+.shop-vhs-label {
+    background: linear-gradient(180deg, #f5f5dc 0%, #e8e8d0 50%, #d4d4c0 100%);
+    padding: 6px 8px;
+    margin-left: 10px;
+    margin-top: 6px;
+    border-radius: 2px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .shop-item-title {
-    font-size: 13px;
+    font-size: 11px;
     text-align: center;
-    color: var(--text-primary);
-    font-weight: 500;
-    /* Allow it to grow slightly/shrink */
-    flex: 0 0 auto;
+    color: #1a1a2e;
+    font-weight: bold;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: 2.6em;
-    /* Reserve space for 2 lines */
+    min-height: 2.4em;
 }
 
 .shop-item-price {
     font-family: var(--font-retro);
-    color: var(--gold);
-    font-size: 14px;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    margin-top: auto;
+    color: #fff;
+    font-size: 12px;
+    background: linear-gradient(135deg, var(--neon-pink) 0%, #cc2255 100%);
+    padding: 4px 10px;
+    border-radius: 3px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 /* Ensure buttons stick to bottom properly */
 .shop-item .btn-buy,
-.shop-item div[style*="font-size:10px"] {
-    margin-top: 10px;
+.shop-item > div[style*="font-size:10px"] {
+    margin-top: auto;
     width: 100%;
+    text-align: center;
+    padding: 8px;
 }
 
 .btn-buy {

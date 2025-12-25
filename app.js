@@ -141,12 +141,15 @@ class VHSTraderGame {
                 const film = this.shelf[i];
                 slot.innerHTML = `
                     <div class="shelf-running-content">
-                        <div class="cover-wrapper">
-                            <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/200x300/2d1f3d/9d4edd?text=VHS'">
-                        </div>
-                        <div class="slot-info">
-                            <div class="slot-title">${film.titleRu}</div>
-                            <div class="slot-price">${film.price * 2}₽</div>
+                        <div class="vhs-case">
+                            <div class="vhs-spine"></div>
+                            <div class="cover-wrapper">
+                                <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/200x300/2d1f3d/9d4edd?text=VHS'">
+                            </div>
+                            <div class="vhs-label">
+                                <div class="slot-title">${film.titleRu}</div>
+                                <div class="slot-price">${film.price * 2}₽</div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -426,9 +429,16 @@ class VHSTraderGame {
             }
 
             item.innerHTML = `
-                <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/120x160/2d1f3d/9d4edd?text=VHS'">
-                <div class="shop-item-title">${film.titleRu}</div>
-                <div class="shop-item-price">${film.price}₽</div>
+                <div class="shop-vhs-case">
+                    <div class="shop-vhs-spine"></div>
+                    <div class="shop-cover-wrapper">
+                        <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/120x160/2d1f3d/9d4edd?text=VHS'">
+                    </div>
+                    <div class="shop-vhs-label">
+                        <div class="shop-item-title">${film.titleRu}</div>
+                        <div class="shop-item-price">${film.price}₽</div>
+                    </div>
+                </div>
                 ${buttonHtml}
             `;
 
