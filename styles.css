@@ -43,17 +43,40 @@ body {
             rgba(0, 0, 0, 0.1) 4px);
 }
 
-/* === 16:9 GAME CONTAINER === */
+/* === GAME CONTAINER === */
 #game-container {
     width: 100%;
+    height: 100%;
     max-width: 1600px;
-    aspect-ratio: 16 / 9;
     max-height: 100vh;
     background: var(--bg-dark);
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    display: flex;
+    flex-direction: column;
     padding: 15px;
     gap: 15px;
+    overflow: hidden;
+}
+
+#main-layout {
+    display: flex;
+    flex: 1;
+    gap: 15px;
+    overflow: hidden;
+}
+
+#left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 35%;
+    max-width: 400px;
+}
+
+#right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
     overflow: hidden;
 }
 
@@ -84,17 +107,19 @@ body {
 /* === CUSTOMER PANEL === */
 #customer-panel {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 15px 20px;
+    text-align: center;
+    gap: 15px;
+    padding: 20px;
     background: linear-gradient(135deg, var(--bg-card) 0%, #2a1a4a 100%);
     border-radius: 8px;
     border: 2px solid var(--neon-pink);
-    min-height: 80px;
+    flex: 1;
 }
 
 #customer-avatar {
-    font-size: 48px;
+    font-size: 64px;
     animation: float 2s ease-in-out infinite;
 }
 
@@ -111,22 +136,11 @@ body {
 }
 
 #customer-speech {
-    flex: 1;
     background: var(--bg-dark);
     padding: 15px;
     border-radius: 8px;
-    position: relative;
     border: 1px solid var(--neon-purple);
-}
-
-#customer-speech::before {
-    content: '';
-    position: absolute;
-    left: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    border: 10px solid transparent;
-    border-right-color: var(--bg-dark);
+    width: 100%;
 }
 
 #customer-request {
@@ -144,18 +158,15 @@ body {
 /* === SHELF === */
 #shelf-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
     overflow: hidden;
     width: 100%;
     height: 100%;
+    flex: 1;
 }
 
 #shelf {
     display: grid;
-    /* 5 columns x 2 rows = 10 slots */
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
     padding: 15px;
     background: linear-gradient(180deg, #3d2a5c 0%, var(--bg-shelf) 50%, #1a1025 100%);
@@ -164,19 +175,15 @@ body {
     box-shadow:
         inset 0 10px 30px rgba(0, 0, 0, 0.6),
         0 5px 20px rgba(0, 0, 0, 0.8);
-
     width: 100%;
-    aspect-ratio: 5 / 3;
-    /* Более высокое соотношение для вытянутых ячеек */
-    max-width: none;
-    max-height: 100%;
+    height: 100%;
+    overflow-y: auto;
 }
 
 /* === SHELF SLOT === */
 .shelf-slot {
     width: 100%;
-    height: 100%;
-    /* aspect-ratio will be determined by grid cell */
+    aspect-ratio: 2 / 3;
     background: linear-gradient(180deg, #2a1a3a 0%, #1a1025 100%);
     border-radius: 6px;
     cursor: pointer;
@@ -223,55 +230,20 @@ body {
 /* === VHS TAPE STYLE === */
 .shelf-running-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     height: 100%;
     width: 100%;
-    padding: 10px 12px;
-    gap: 12px;
+    padding: 10px;
+    gap: 8px;
     background: linear-gradient(180deg, #1a1a2e 0%, #0d0d15 100%);
 }
 
-.vhs-case {
-    flex: 0 0 auto;
-    height: 100%;
-    max-height: 100%;
-    display: flex;
-    align-items: stretch;
-    position: relative;
-    min-height: 0;
-    background: linear-gradient(135deg, #2a2a3a 0%, #1a1a25 50%, #0a0a10 100%);
-    border-radius: 4px;
-    padding: 6px;
-    padding-left: 10px;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-        0 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.vhs-spine {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 6px;
-    background: linear-gradient(180deg,
-        #3d3d4d 0%,
-        #2a2a35 20%,
-        #1a1a22 50%,
-        #2a2a35 80%,
-        #3d3d4d 100%);
-    border-radius: 4px 0 0 4px;
-    box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.5);
-}
-
 .cover-wrapper {
-    height: 100%;
+    width: 100%;
+    height: auto;
     aspect-ratio: 2 / 3;
-    min-height: 0;
     position: relative;
-    width: auto;
     overflow: hidden;
     border-radius: 3px;
     border: 2px solid #1a1a25;
@@ -306,42 +278,24 @@ body {
     filter: saturate(1.1) contrast(1.05);
 }
 
-.slot-curtain {
-    flex: 1;
-    align-self: stretch;
-    background: linear-gradient(135deg, rgba(245, 245, 220, 0.92) 0%, rgba(232, 232, 208, 0.9) 50%, rgba(212, 212, 192, 0.9) 100%);
-    padding: 10px 12px;
-    border-radius: 4px;
-    border: 2px solid #3a2a4a;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        0 3px 8px rgba(0, 0, 0, 0.4);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    justify-content: center;
-    min-width: 40%;
-}
-
 .slot-title {
-    color: #1a1a2e;
-    font-size: 11px;
+    color: #fff;
+    font-size: 12px;
     text-align: center;
     line-height: 1.2;
     font-weight: bold;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: none;
-    min-height: 3.6em;
+    text-shadow: 1px 1px 2px #000;
 }
 
 .slot-price {
     background: linear-gradient(135deg, var(--neon-pink) 0%, #cc2255 100%);
     color: #fff;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: bold;
     padding: 4px 10px;
     border-radius: 2px;
@@ -354,16 +308,16 @@ body {
 /* === BUTTONS === */
 #action-buttons {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 15px;
     padding: 10px 0;
 }
 
 .btn {
     font-family: var(--font-retro);
-    font-size: 12px;
-    padding: 15px 25px;
+    font-size: 14px;
+    padding: 18px 25px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -432,11 +386,11 @@ body {
     border: 3px solid var(--neon-purple);
     border-radius: 12px;
     padding: 25px;
-    max-width: 500px;
+    max-width: 90vw;
+    max-height: 90vh;
     width: 100%;
     box-shadow: var(--shadow-neon);
     text-align: center;
-    max-height: 90vh;
     overflow-y: auto;
 }
 
@@ -497,15 +451,15 @@ body {
 
 /* === SHOP MODAL === */
 .shop-content {
-    max-width: 900px;
+    max-width: 90vw;
 }
 
 #shop-catalog {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
     padding: 15px;
-    max-height: 50vh;
+    max-height: 60vh;
     overflow-y: auto;
 }
 
@@ -537,65 +491,6 @@ body {
     border-color: #333;
 }
 
-.shop-vhs-case {
-    position: relative;
-    padding: 6px;
-    background: linear-gradient(180deg, #3d3d4d 0%, #2a2a35 20%, #1a1a22 100%);
-    border-radius: 4px;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        0 3px 6px rgba(0, 0, 0, 0.4);
-}
-
-.shop-vhs-spine {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 8px;
-    background: linear-gradient(180deg,
-        #4d4d5d 0%,
-        #3a3a45 20%,
-        #2a2a32 50%,
-        #3a3a45 80%,
-        #4d4d5d 100%);
-    border-radius: 4px 0 0 4px;
-    box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.5);
-}
-
-.shop-cover-wrapper {
-    width: calc(100% - 10px);
-    margin-left: 10px;
-    position: relative;
-    border: 2px solid #1a1a25;
-    border-radius: 3px;
-    overflow: hidden;
-    box-shadow:
-        inset 0 0 10px rgba(0, 0, 0, 0.5),
-        0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.shop-cover-wrapper img {
-    aspect-ratio: 2 / 3;
-}
-
-.shop-cover-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.1) 0%,
-        transparent 50%,
-        rgba(0, 0, 0, 0.2) 100%
-    );
-    pointer-events: none;
-    z-index: 1;
-}
-
 .shop-item img {
     width: 100%;
     aspect-ratio: 2/3;
@@ -604,21 +499,10 @@ body {
     filter: saturate(1.1) contrast(1.05);
 }
 
-.shop-vhs-label {
-    background: linear-gradient(180deg, #f5f5dc 0%, #e8e8d0 50%, #d4d4c0 100%);
-    padding: 6px 8px;
-    margin-left: 10px;
-    margin-top: 6px;
-    border-radius: 2px;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
 .shop-item-title {
-    font-size: 11px;
+    font-size: 12px;
     text-align: center;
-    color: #1a1a2e;
+    color: #fff;
     font-weight: bold;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -626,6 +510,7 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
     min-height: 2.4em;
+    margin-top: 8px;
 }
 
 .shop-item-price {
@@ -640,28 +525,20 @@ body {
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
 }
 
-/* Ensure buttons stick to bottom properly */
-.shop-item .btn-buy,
-.shop-item > div[style*="font-size:10px"] {
-    margin-top: auto;
-    width: 100%;
-    text-align: center;
-    padding: 8px;
-}
-
 .btn-buy {
     background: var(--neon-green);
     color: #000;
     border: none;
-    padding: 8px 16px;
+    padding: 10px 16px;
     border-radius: 4px;
     font-family: var(--font-retro);
-    font-size: 10px;
+    font-size: 12px;
     cursor: pointer;
     width: 100%;
     transition: all 0.2s;
     text-transform: uppercase;
     font-weight: bold;
+    margin-top: auto;
 }
 
 .btn-buy:hover {
@@ -713,18 +590,23 @@ body {
     }
 }
 
-/* === RESPONSIVE === */
-@media (max-width: 1000px) {
-    #game-container {
-        aspect-ratio: auto;
-        height: 100vh;
-        max-height: none;
-        grid-template-rows: auto auto 1fr auto;
+/* === RESPONSIVE FOR MOBILE LANDSCAPE === */
+@media (max-width: 900px) and (orientation: landscape) {
+    #left-column {
+        width: 30%;
+        max-width: 300px;
     }
 
-    #shelf {
-        grid-template-columns: repeat(3, 1fr);
-        aspect-ratio: auto;
-        overflow-y: auto;
+    .btn {
+        font-size: 12px;
+        padding: 15px 20px;
+    }
+
+    #customer-avatar {
+        font-size: 48px;
+    }
+
+    #customer-request {
+        font-size: 14px;
     }
 }
