@@ -105,7 +105,7 @@ class VHSTraderGame {
         // Try to load saved progress
         if (this.loadProgress()) {
             // Progress loaded successfully
-            this.customerRequestEl.textContent = `День ${this.day}. Нажмите "Начать день" чтобы открыть магазин.`;
+            this.customerRequestEl.textContent = `День ${this.day}. Нажмите "Начать" чтобы открыть магазин.`;
         } else {
             // No saved progress - start fresh
             // Generate random shop order for this playthrough
@@ -157,11 +157,8 @@ class VHSTraderGame {
                 const film = this.shelf[i];
                 slot.innerHTML = `
                     <div class="shelf-running-content">
-                        <div class="vhs-case">
-                            <div class="vhs-spine"></div>
-                            <div class="cover-wrapper">
-                                <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/200x300/2d1f3d/9d4edd?text=VHS'">
-                            </div>
+                        <div class="cover-wrapper">
+                            <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/100x150/2d1f3d/9d4edd?text=VHS'">
                         </div>
                         <div class="slot-curtain">
                             <div class="slot-title">${film.titleRu}</div>
@@ -172,7 +169,7 @@ class VHSTraderGame {
                 slot.addEventListener('click', () => this.openFilmModal(i));
             } else {
                 slot.classList.add('empty');
-                slot.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#666;font-size:24px;">📼</div>';
+                slot.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#444;font-size:18px;">📼</div>';
             }
 
             this.shelfEl.appendChild(slot);
@@ -331,10 +328,10 @@ class VHSTraderGame {
             this.saveProgress();
         }, 200);
 
-        this.customerRequestEl.textContent = `"Отлично! Именно то, что я искал! Держите ${salePrice}₽"`;
+        this.customerRequestEl.textContent = `"Отлично! Держите ${salePrice}₽"`;
 
         // Feedback
-        const panel = document.getElementById('customer-panel');
+        const panel = document.getElementById('customer-bar');
         panel.classList.add('sale-success');
         setTimeout(() => panel.classList.remove('sale-success'), 500);
 
@@ -346,22 +343,22 @@ class VHSTraderGame {
     }
 
     handleRejection() {
-        const panel = document.getElementById('customer-panel');
+        const panel = document.getElementById('customer-bar');
         panel.classList.add('sale-fail');
         setTimeout(() => panel.classList.remove('sale-fail'), 500);
 
         const rejections = [
-            "Нет, это не то... Пойду поищу в другом месте.",
-            "Хм, не подходит. До свидания!",
-            "Это не то, что я искал. Удачи!",
-            "Нет, спасибо. Пойду дальше.",
-            "Не то, что я хотел. Всего хорошего!"
+            "Не то... Пойду в другой магазин.",
+            "Хм, не подходит.",
+            "Это не то, что искал!",
+            "Нет, спасибо.",
+            "Не то..."
         ];
 
         this.customerRequestEl.textContent = `"${rejections[Math.floor(Math.random() * rejections.length)]}"`;
 
         // Customer leaves after rejection
-        setTimeout(() => this.nextCustomer(), 1500);
+        setTimeout(() => this.nextCustomer(), 1200);
     }
 
     endDay() {
@@ -370,7 +367,7 @@ class VHSTraderGame {
         this.currentRequest = null;
 
         this.customerAvatarEl.textContent = '🌙';
-        this.customerRequestEl.textContent = 'Магазин закрыт. Время пополнить запасы!';
+        this.customerRequestEl.textContent = 'Магазин закрыт. Пора закупаться!';
         this.currentCustomerEl.textContent = '0';
         this.totalCustomersEl.textContent = '0';
 
@@ -431,7 +428,7 @@ class VHSTraderGame {
             const isPurchasable = canAfford && hasEmptySlot;
 
             if (!isPurchasable) {
-                item.classList.add('owned'); // effectively disabled
+                item.classList.add('owned');
             }
 
             // Button HTML
@@ -439,29 +436,22 @@ class VHSTraderGame {
             if (isPurchasable) {
                 buttonHtml = `<button class="btn-buy">Купить</button>`;
             } else if (!canAfford) {
-                buttonHtml = `<div style="color:var(--neon-pink);font-size:10px;">Не хватает денег</div>`;
+                buttonHtml = `<div style="color:var(--neon-pink);font-size:8px;text-align:center;">Нет денег</div>`;
             } else {
-                buttonHtml = `<div style="color:var(--text-secondary);font-size:10px;">Нет места</div>`;
+                buttonHtml = `<div style="color:var(--text-secondary);font-size:8px;text-align:center;">Нет места</div>`;
             }
 
             item.innerHTML = `
-                <div class="shop-vhs-case">
-                    <div class="shop-vhs-spine"></div>
-                    <div class="shop-cover-wrapper">
-                        <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/120x160/2d1f3d/9d4edd?text=VHS'">
-                    </div>
-                    <div class="shop-vhs-label">
-                        <div class="shop-item-title">${film.titleRu}</div>
-                        <div class="shop-item-price">${film.price}₽</div>
-                    </div>
-                </div>
+                <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/90x135/2d1f3d/9d4edd?text=VHS'">
+                <div class="shop-item-title">${film.titleRu}</div>
+                <div class="shop-item-price">${film.price}₽</div>
                 ${buttonHtml}
             `;
 
             if (isPurchasable) {
                 const btn = item.querySelector('.btn-buy');
                 btn.addEventListener('click', (e) => {
-                    e.stopPropagation(); // prevent card click if we add one later
+                    e.stopPropagation();
                     this.buyFilm(film);
                 });
             }
@@ -495,7 +485,7 @@ class VHSTraderGame {
 
         this.btnStartDay.style.display = 'inline-block';
         this.customerAvatarEl.textContent = '☀️';
-        this.customerRequestEl.textContent = `День ${this.day}. Нажмите "Начать день" чтобы открыть магазин.`;
+        this.customerRequestEl.textContent = `День ${this.day}. Нажмите "Начать" чтобы открыть магазин.`;
 
         this.updateStats();
         // Save progress when new day starts
@@ -519,7 +509,7 @@ class VHSTraderGame {
     }
 
     showVictory(message) {
-        this.victoryMessage.textContent = message + ` Ваш баланс: ${this.balance}₽. Дней: ${this.day}.`;
+        this.victoryMessage.textContent = `${message} Баланс: ${this.balance}₽. Дней: ${this.day}.`;
         this.victoryModal.classList.remove('hidden');
     }
 
@@ -568,7 +558,7 @@ class VHSTraderGame {
         this.btnEndDay.style.display = 'none';
 
         this.customerAvatarEl.textContent = '🧑';
-        this.customerRequestEl.textContent = 'Нажмите "Начать день" чтобы открыть магазин';
+        this.customerRequestEl.textContent = 'Нажмите "Начать" чтобы открыть магазин';
         this.currentCustomerEl.textContent = '0';
         this.totalCustomersEl.textContent = '0';
 
