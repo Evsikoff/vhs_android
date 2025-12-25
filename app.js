@@ -146,10 +146,10 @@ class VHSTraderGame {
                             <div class="cover-wrapper">
                                 <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/200x300/2d1f3d/9d4edd?text=VHS'">
                             </div>
-                            <div class="vhs-label">
-                                <div class="slot-title">${film.titleRu}</div>
-                                <div class="slot-price">${film.price * 2}₽</div>
-                            </div>
+                        </div>
+                        <div class="slot-curtain">
+                            <div class="slot-title">${film.titleRu}</div>
+                            <div class="slot-price">${film.price * 2}₽</div>
                         </div>
                     </div>
                 `;
@@ -189,47 +189,35 @@ class VHSTraderGame {
         const shelfFilmIds = this.shelf.filter(f => f !== null).map(f => f.id);
 
         let chosenRequests = [];
-        let usedRequestIndices = new Set();
+        const usedRequestIndices = new Set();
 
-        // 2. 50% linked to shelf
-        const linkedCount = Math.ceil(count / 2);
+        // 2.1: gather up to 4 requests linked to 4 different random shelf films (unique requests)
+        const shuffledFilms = [...shelfFilmIds].sort(() => Math.random() - 0.5).slice(0, 4);
+        shuffledFilms.forEach(filmId => {
+            if (chosenRequests.length >= count) return;
 
-        // Find requests that link to our shelf films
-        const linkedRequests = REQUESTS.filter((req, index) => {
-            // Check if this request links to ANY film we have on shelf
-            const hasLink = req.linkedFilmIds.some(id => shelfFilmIds.includes(id));
-            if (hasLink) return true;
-            return false;
+            const linked = REQUESTS
+                .map((req, idx) => ({ req, idx }))
+                .filter(({ req, idx }) => req.linkedFilmIds.includes(filmId) && !usedRequestIndices.has(idx));
+
+            if (linked.length === 0) return;
+
+            const { req, idx } = linked[Math.floor(Math.random() * linked.length)];
+            chosenRequests.push(req);
+            usedRequestIndices.add(idx);
         });
 
-        // Add random linked requests
-        const shuffledLinked = [...linkedRequests].sort(() => Math.random() - 0.5);
-
-        for (let req of shuffledLinked) {
-            if (chosenRequests.length >= linkedCount) break;
-
-            // Find original index to mark as used
-            const originalIndex = REQUESTS.indexOf(req);
-            if (!usedRequestIndices.has(originalIndex)) {
-                chosenRequests.push(req);
-                usedRequestIndices.add(originalIndex);
-            }
-        }
-
-        // 3. Remaining random requests (unique for today)
-        const remainingCount = count - chosenRequests.length;
+        // 2.2: fill remaining slots with random unique requests
         const allShuffled = [...REQUESTS].map((r, i) => ({ r, i })).sort(() => Math.random() - 0.5);
-
         for (let { r, i } of allShuffled) {
             if (chosenRequests.length >= count) break;
+            if (usedRequestIndices.has(i)) continue;
 
-            if (!usedRequestIndices.has(i)) {
-                chosenRequests.push(r);
-                usedRequestIndices.add(i);
-            }
+            chosenRequests.push(r);
+            usedRequestIndices.add(i);
         }
 
-        // 4. Shuffle the final list and add avatars
+        // Shuffle the final list and add avatars
         return chosenRequests
             .sort(() => Math.random() - 0.5)
             .map(request => ({
@@ -310,19 +298,26 @@ class VHSTraderGame {
         this.soldTotal++;
         this.soldUnique.add(film.id);
 
-        // Remove from shelf
-        this.shelf[slotIndex] = null;
-        this.ownedFilms.delete(film.id);
+        const slotEl = this.shelfEl.querySelector(`.shelf-slot[data-index="${slotIndex}"]`);
+        if (slotEl) {
+            slotEl.classList.add('sold');
+        }
+
+        this.updateStats();
+
+        // Remove from shelf with a short transition so the slot visibly clears
+        setTimeout(() => {
+            this.shelf[slotIndex] = null;
+            this.ownedFilms.delete(film.id);
+            this.renderShelf();
+        }, 200);
+
+        this.customerRequestEl.textContent = `"Отлично! Именно то, что я искал! Держите ${salePrice}₽"`;
 
         // Feedback
         const panel = document.getElementById('customer-panel');
         panel.classList.add('sale-success');
         setTimeout(() => panel.classList.remove('sale-success'), 500);
-
-        this.customerRequestEl.textContent = `"Отлично! Именно то, что я искал! Держите ${salePrice}₽"`;
-
-        this.updateStats();
-        this.renderShelf();
 
         // Check win condition
         if (this.checkWinCondition()) return;
