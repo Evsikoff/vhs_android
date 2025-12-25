@@ -155,20 +155,26 @@ class VHSTraderGame {
 
             if (this.shelf[i]) {
                 const film = this.shelf[i];
-                slot.innerHTML = `
-                    <div class="shelf-running-content">
-                        <div class="vhs-case">
-                            <div class="vhs-spine"></div>
-                            <div class="cover-wrapper">
-                                <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/200x300/2d1f3d/9d4edd?text=VHS'">
-                            </div>
-                        </div>
-                        <div class="slot-curtain">
-                            <div class="slot-title">${film.titleRu}</div>
-                            <div class="slot-price">${film.price * 2}₽</div>
-                        </div>
-                    </div>
-                `;
+                const content = document.createElement('div');
+                content.className = 'shelf-running-content';
+
+                const title = document.createElement('div');
+                title.className = 'slot-title';
+                title.textContent = film.titleRu;
+
+                const coverWrapper = document.createElement('div');
+                coverWrapper.className = 'cover-wrapper';
+                coverWrapper.innerHTML = `<img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/200x300/2d1f3d/9d4edd?text=VHS'">`;
+
+                const price = document.createElement('div');
+                price.className = 'slot-price';
+                price.textContent = `${film.price * 2}₽`;
+
+                content.appendChild(title);
+                content.appendChild(coverWrapper);
+                content.appendChild(price);
+                slot.appendChild(content);
+
                 slot.addEventListener('click', () => this.openFilmModal(i));
             } else {
                 slot.classList.add('empty');
