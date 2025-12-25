@@ -146,10 +146,10 @@ class VHSTraderGame {
                             <div class="cover-wrapper">
                                 <img src="${film.coverUrl}" alt="${film.titleRu}" onerror="this.src='https://placehold.co/200x300/2d1f3d/9d4edd?text=VHS'">
                             </div>
-                            <div class="vhs-label">
-                                <div class="slot-title">${film.titleRu}</div>
-                                <div class="slot-price">${film.price * 2}₽</div>
-                            </div>
+                        </div>
+                        <div class="slot-curtain">
+                            <div class="slot-title">${film.titleRu}</div>
+                            <div class="slot-price">${film.price * 2}₽</div>
                         </div>
                     </div>
                 `;
