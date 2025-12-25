@@ -310,19 +310,26 @@ class VHSTraderGame {
         this.soldTotal++;
         this.soldUnique.add(film.id);
 
-        // Remove from shelf
-        this.shelf[slotIndex] = null;
-        this.ownedFilms.delete(film.id);
+        const slotEl = this.shelfEl.querySelector(`.shelf-slot[data-index="${slotIndex}"]`);
+        if (slotEl) {
+            slotEl.classList.add('sold');
+        }
+
+        this.updateStats();
+
+        // Remove from shelf with a short transition so the slot visibly clears
+        setTimeout(() => {
+            this.shelf[slotIndex] = null;
+            this.ownedFilms.delete(film.id);
+            this.renderShelf();
+        }, 200);
+
+        this.customerRequestEl.textContent = `"Отлично! Именно то, что я искал! Держите ${salePrice}₽"`;
 
         // Feedback
         const panel = document.getElementById('customer-panel');
         panel.classList.add('sale-success');
         setTimeout(() => panel.classList.remove('sale-success'), 500);
-
-        this.customerRequestEl.textContent = `"Отлично! Именно то, что я искал! Держите ${salePrice}₽"`;
-
-        this.updateStats();
-        this.renderShelf();
 
         // Check win condition
         if (this.checkWinCondition()) return;
