@@ -330,12 +330,12 @@ body {
     line-height: 1.2;
     font-weight: bold;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-shadow: none;
-    min-height: 2.4em;
+    min-height: 3.6em;
 }
 
 .slot-price {
